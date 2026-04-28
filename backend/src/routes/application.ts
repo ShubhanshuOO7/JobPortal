@@ -3,7 +3,7 @@ export const applyRouter = express.Router();
 import { userMiddleware } from "../middlewares/middleware";
 import { Prisma, PrismaClient } from "@prisma/client";
 import {ApplicationStatus} from "@prisma/client"
-import { profile } from "console"; 
+import prisma from "../utils/prisma";
 applyRouter.use(userMiddleware);
 interface customRequest extends Request {
   id?: Number;
@@ -18,9 +18,6 @@ applyRouter.post("/applyJob/:id", async (req: customRequest, res: Response) => {
         success: false,
       });
     }
-    const prisma = new PrismaClient({
-      datasourceUrl: process.env.DATABASE_URL,
-    });
     const existingApplication = await prisma.applications.findFirst({
       where: {
         jobId: Number(jobId), 
@@ -68,9 +65,6 @@ applyRouter.get(
   async (req: customRequest, res: Response) => {
     try {
       const userId = req.id;
-      const prisma = new PrismaClient({
-        datasourceUrl: process.env.DATABASE_URL,
-      });
       const application = await prisma.applications.findMany({
         where: {
           applicantId: Number(userId),
@@ -102,9 +96,7 @@ applyRouter.get(
 applyRouter.get("/getApplicants/:id", async (req: Request, res: Response) => {
   try {
     const jobId = req.params.id;
-    const prisma = new PrismaClient({
-      datasourceUrl: process.env.DATABASE_URL,
-    });
+    
     const Jobs = await prisma.job.findMany({
       where: {
         id: Number(jobId),
@@ -148,10 +140,6 @@ applyRouter.put("/updateStatus/:id", async (req: Request, res: Response) => {
         success: false,
       });
     }
-
-    const prisma = new PrismaClient({
-      datasourceUrl: process.env.DATABASE_URL,
-    });
 
     const application = await prisma.applications.update({
       where: {

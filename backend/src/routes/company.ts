@@ -1,6 +1,6 @@
 import { userMiddleware } from '../middlewares/middleware';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { json } from 'body-parser';
+import prisma from '../utils/prisma';
 import cookieParser from 'cookie-parser';
 import express,{Request,Response} from 'express'
 import { singleUpload } from '../middlewares/multer';
@@ -23,9 +23,6 @@ companyRouter.post('/registration',userMiddleware,async(req:customId,res:Respons
             status : false
         })
     }
-    const prisma = new PrismaClient({
-        datasourceUrl : process.env.DATABASE_URL,
-    })
     const existingcompany = await prisma.company.findUnique({
         where:{
             companyName : req.body.companyName
@@ -58,9 +55,7 @@ interface customRequest extends Request{
 companyRouter.get('/get',userMiddleware,async(req:customRequest,res:Response)=>{
     try {
         const userId = req.id
-        const prisma = new PrismaClient({
-            datasourceUrl : process.env.DATABASE_URL
-        })
+        
         const companies = await prisma.company.findMany({
             where:{
                 userId : userId
@@ -86,9 +81,7 @@ interface Params{
 companyRouter.get('/getById/:id',async(req:Request<Params>,res)=>{
     try {
         const companyId = req.params.id;
-        const prisma = new PrismaClient({
-            datasourceUrl : process.env.DATABASE_URL
-        })
+        
         const company = await prisma.company.findFirst({
             where:{
                 id : Number(companyId)
@@ -125,9 +118,7 @@ companyRouter.put('/update/:id',singleUpload,async(req:Request<update>,res)=>{
             success : false
         })
     }
-    const prisma = new PrismaClient({
-        datasourceUrl : process.env.DATABASE_URL
-    })
+    
     const company = await prisma.company.update({
         where:{
             id : Number(companyId) 

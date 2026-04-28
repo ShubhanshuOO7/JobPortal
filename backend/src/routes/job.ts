@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import express,{request, Request,Response} from 'express'
 export const jobRouter = express.Router();
 import { userMiddleware } from '../middlewares/middleware';
+import prisma from '../utils/prisma';
 jobRouter.use(express.json());
 jobRouter.use(userMiddleware);
 interface jobPost{
@@ -29,9 +30,6 @@ jobRouter.post("/jobPost",userMiddleware,async(req:customRequest,res:Response)=>
             success : false
         })
     }
-    const prisma = new PrismaClient({
-        datasourceUrl : process.env.DATABASE_URL
-    })
     const job = await prisma.job.create({
         data:{
             title,
@@ -59,9 +57,7 @@ jobRouter.post("/jobPost",userMiddleware,async(req:customRequest,res:Response)=>
 jobRouter.get("/get",async(req:Request,res:Response)=>{
     try {
         const keyword = req.query.keyword as string || ""
-        const prisma = new PrismaClient({
-            datasourceUrl : process.env.DATABASE_URL
-        })
+        
          const jobs = await prisma.job.findMany({
       where: keyword
         ? {
@@ -102,9 +98,7 @@ jobRouter.get("/get",async(req:Request,res:Response)=>{
 jobRouter.get("/getJob/:id",async(req:Request,res:Response)=>{
     try {
         const jobId = req.params.id;
-        const prisma = new PrismaClient({
-            datasourceUrl : process.env.DATABASE_URL
-        })
+        
         const jobs = await prisma.job.findFirst({
             where:{
                 id : Number(jobId)
@@ -128,9 +122,7 @@ jobRouter.get("/getJob/:id",async(req:Request,res:Response)=>{
 jobRouter.get("/getAdminJobs",async(req:customRequest,res:Response)=>{
     try {
         const adminId = req.id;
-        const prisma = new PrismaClient({
-            datasourceUrl : process.env.DATABASE_URL
-        })
+        
         const jobs = await prisma.job.findMany({
             where:{
                 createdBy : Number(adminId)

@@ -9,6 +9,7 @@ import { json } from "body-parser";
 import { singleUpload } from "../middlewares/multer";
 import getDataUri from "../utils/datauri";
 import cloudinary from "../utils/cloudinary";
+import prisma from "../utils/prisma";
 import { profile } from "console";
 userRouter.use(cookieParser());
 userRouter.use(express.json());
@@ -30,9 +31,6 @@ userRouter.post("/signup",singleUpload,async (req:Request,res:Response) => {
     const file = req.file;
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content ?? "") ;
-    const prisma = new PrismaClient({
-      datasourceUrl: process.env.DATABASE_URL,
-    });
     const user = await prisma.user.findUnique({where:{email: req.body.email}});
     if(user){
       return res.status(400).json({
@@ -108,9 +106,7 @@ userRouter.post("/login",async(req,res)=>{
       status: false
     })
   }
-  const prisma = new PrismaClient({
-    datasourceUrl  : process.env.DATABASE_URL
-  })
+  
   try {
     let user = await prisma.user.findUnique({
       where:{
@@ -193,9 +189,7 @@ userRouter.post("/update",userMiddleware,singleUpload,async(req:Request,res:Resp
     // cloudinary aayega idhar
     const skillsArray = skills.split(" ");
 
-     const prisma = new PrismaClient({
-      datasourceUrl  : process.env.DATABASE_URL
-     })
+     
     const user = await prisma.user.update({
       where:{
         email : req.body.email
@@ -245,9 +239,7 @@ userRouter.post("/update",userMiddleware,singleUpload,async(req:Request,res:Resp
 })
 userRouter.get("/getAllUsers",async(req:Request,res:Response)=>{
     try {
-       const prisma = new PrismaClient({
-        datasourceUrl : process.env.DATABASE_URL
-       })
+       
        const users = await prisma.user.findMany({
           select:{
              fullName : true,
