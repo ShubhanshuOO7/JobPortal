@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../src/generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -28,19 +28,19 @@ model User {
 }
 
 model Profile {
-  id                 Int     @id @default(autoincrement())
-  profileId          Int     @unique
+  id                 Int      @id @default(autoincrement())
+  profileId          Int      @unique
   bio                String?
-  skills             String[] 
+  skills             String[]
   resume             String?
   resumeOriginalName String?
   profilePhoto       String?
-  user               User    @relation(fields: [profileId], references: [id])
+  user               User     @relation(fields: [profileId], references: [id])
 }
 
 model Job {
   id           Int            @id @default(autoincrement())
-  createdBy    Int            
+  createdBy    Int
   title        String
   description  String
   requirements String
@@ -50,8 +50,8 @@ model Job {
   jobType      String
   position     Int
   companyId    Int
-  user         User?           @relation(fields: [createdBy], references: [id])
-  company      Company         @relation(fields: [companyId],references: [id])     
+  user         User?          @relation(fields: [createdBy], references: [id])
+  company      Company        @relation(fields: [companyId], references: [id])
   applications Applications[]
   createdAt    DateTime       @default(now())
 }
@@ -65,17 +65,17 @@ model Company {
   logo         String?
   jobCompany   Int?
   userId       Int
-  jobs         Job[]   
+  jobs         Job[]
   JobPoster    User?    @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
 }
 
 model Applications {
-  id          Int                @id @default(autoincrement())
+  id          Int               @id @default(autoincrement())
   jobId       Int?
-  job         Job?                @relation(fields: [jobId], references: [id])
+  job         Job?              @relation(fields: [jobId], references: [id])
   applicantId Int
-  applicant   User               @relation(fields: [applicantId], references: [id])
+  applicant   User              @relation(fields: [applicantId], references: [id])
   status      ApplicationStatus @default(pending)
 }
 
