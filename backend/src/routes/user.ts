@@ -9,7 +9,7 @@ import { json } from "body-parser";
 import { singleUpload } from "../middlewares/multer";
 import getDataUri from "../utils/datauri";
 import cloudinary from "../utils/cloudinary";
-import prisma from "../utils/prisma";
+import {prisma} from "../utils/prisma";
 import { profile } from "console";
 userRouter.use(cookieParser());
 userRouter.use(express.json());

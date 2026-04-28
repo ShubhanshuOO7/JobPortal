@@ -1,6 +1,6 @@
 import { userMiddleware } from '../middlewares/middleware';
 import { Prisma, PrismaClient } from '@prisma/client';
-import prisma from '../utils/prisma';
+import {prisma} from '../utils/prisma';
 import cookieParser from 'cookie-parser';
 import express,{Request,Response} from 'express'
 import { singleUpload } from '../middlewares/multer';

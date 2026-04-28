@@ -3,7 +3,7 @@ export const applyRouter = express.Router();
 import { userMiddleware } from "../middlewares/middleware";
 import { Prisma, PrismaClient } from "@prisma/client";
 import {ApplicationStatus} from "@prisma/client"
-import prisma from "../utils/prisma";
+import {prisma} from "../utils/prisma"
 applyRouter.use(userMiddleware);
 interface customRequest extends Request {
   id?: Number;
