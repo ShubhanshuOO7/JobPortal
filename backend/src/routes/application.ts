@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 export const applyRouter = express.Router();
 import { userMiddleware } from "../middlewares/middleware";
-import { ApplicationStatus } from "@prisma/client";
+import * as Prisma from "@prisma/client";
 import { prisma } from "../utils/prisma";
 applyRouter.use(userMiddleware);
 interface customRequest extends Request {
@@ -145,7 +145,7 @@ applyRouter.put("/updateStatus/:id", async (req: Request, res: Response) => {
         id: Number(applicantId),
       },
       data: {
-        status: status.toLowerCase() as ApplicationStatus, // ✅ cast to enum
+        status: status.toLowerCase() as Prisma.ApplicationStatus, // ✅ cast to enum
       },
     });
 
